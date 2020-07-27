@@ -13,14 +13,14 @@
 import { Swiper, SwiperItem } from "components/common/swiper";
 
 export default {
-  name: "",
-  props:{
+  name: "HomeSwiper",
+  props: {
     banners: {
       type: Array,
-        default() {
-          return []
-        }
-    }
+      default() {
+        return [];
+      },
+    },
   },
   components: { Swiper, SwiperItem },
 };
