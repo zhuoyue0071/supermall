@@ -3,14 +3,21 @@
     <nav-bar class="home-nav">
       <div slot="center">购物街</div>
     </nav-bar>
-    <scroll class="content" ref="scroll">
+    <scroll
+      class="content"
+      ref="scroll"
+      :probe-type="3"
+      @scroll="contentScroll"
+      :pull-up-load="true"
+      @pullingUp="loadMore"
+    >
       <home-swiper :banners="banners" />
       <recommend-view :recommends="recommends"></recommend-view>
       <feature-view></feature-view>
       <tab-control class="tab-control" :titles="['流行','新款','精选']" @tabClick="tabClick" />
       <goods-list :goods="showGoods" />
     </scroll>
-    <back-top @click.native="backClick"></back-top>
+    <back-top @click.native="backClick" v-show="isShowBackTop"></back-top>
   </div>
 </template>
 
@@ -49,6 +56,7 @@ export default {
         sell: { page: 0, list: [] },
       },
       currentType: "pop",
+      isShowBackTop: false,
     };
   },
   computed: {
@@ -79,6 +87,14 @@ export default {
       }
     },
 
+    contentScroll(position) {
+      this.isShowBackTop = -position.y > 1000;
+    },
+
+    loadMore() {
+      this.getHomeGoods(this.currentType);
+    },
+
     /* 网络请求相关方法 */
     //1.请求多个数据
     getHomeMultidata() {
@@ -93,23 +109,23 @@ export default {
       getHomeGoods(type, page).then((res) => {
         this.goods[type].list.push(...res.data.list);
         this.goods[type].page += 1;
+        this.$refs.scroll.finishPullUp();
       });
     },
 
     //监听返回顶部按钮
-    backClick(){
-      this.$refs.scroll.scrollTo(0,0);
-    }
+    backClick() {
+      this.$refs.scroll.scrollTo(0, 0);
+    },
   },
 };
 </script>
 
 <style scoped>
-
 #home {
   /* padding-top: 44px; */
   height: 100vh;
-  position:relative;
+  position: relative;
 }
 
 .home-nav {
@@ -122,7 +138,6 @@ export default {
   z-index: 9;
 }
 
-
 .tab-control {
   background-color: #fffbfb;
   position: sticky;
@@ -132,9 +147,9 @@ export default {
 
 .content {
   overflow: hidden;
-  position:absolute;
-  top:44px;
-  bottom:49px;
+  position: absolute;
+  top: 44px;
+  bottom: 49px;
   left: 0;
   right: 0;
 }
