@@ -33,6 +33,7 @@ export default {
 
 <style>
 .tab-control {
+  background-color: #ffffff;
   display: flex;
   text-align: center;
   height: 40px;

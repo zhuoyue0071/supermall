@@ -115,23 +115,23 @@ export default {
     };
   },
   mounted() {
-    this.scroll = new BScroll(".wrapper", {
-      probeType: 3,
-      pullUpLoad: true,
-    });
-    this.scroll.on("scroll", (position) => {
-      // console.log(position);
-    });
-    this.scroll.on("pullingUp", () => {
-      console.log('上拉加载更多')
-      setTimeout(() => {
-        this.scroll.finishPullUp()
-      }, 2000);
-    });
+    // this.scroll = new BScroll(".wrapper", {
+    //   probeType: 3,
+    //   pullUpLoad: true,
+    // });
+    // this.scroll.on("scroll", (position) => {
+    //   // console.log(position);
+    // });
+    // this.scroll.on("pullingUp", () => {
+    //   console.log('上拉加载更多')
+    //   setTimeout(() => {
+    //     this.scroll.finishPullUp()
+    //   }, 2000);
+    // });
   },
   methods: {
     bsClick() {
-console.log('11111');
+      console.log('11111');
     }
   }
 };

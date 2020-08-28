@@ -1,7 +1,8 @@
 <template>
   <div class="wrapper" ref="wrapper">
-    <div class="content">
-      <slot><button class="clickOnMe" @click="clickMe">点我</button></slot>
+    <div>
+      <slot>
+      </slot>
     </div>
   </div>
 </template>
@@ -13,17 +14,17 @@ export default {
   name: "Scroll",
   data() {
     return {
-      scroll: null,
+      scroll: {},
     };
   },
   props: {
     probeType: {
       type: Number,
-      default: 0
+      default: 0,
     },
     pullUpLoad: {
-      type:Boolean,
-      default:false
+      type: Boolean,
+      default: false
     }
   },
   mounted() {
@@ -35,34 +36,45 @@ export default {
     });
 
     //2.监听滚动的位置
-    this.scroll.on('scroll', (position) => {
-      // console.log(position);
-      this.$emit('scroll', position)
-    })
+    if(this.probeType==2 || this.probeType==3){
+
+      this.scroll.on("scroll", (position) => {
+        // console.log(position);
+        this.$emit("scroll", position);
+      });
+    }
 
     //3. 监听上拉事件
-    this.scroll.on("pullingUp",() => {
-     this.$emit('pullingUp')
-    })
+    if(this.pullUpLoad){
+      this.scroll.on("pullingUp", () => {
+        console.log(11);
+        this.$emit("pullingUp");
+      });
+
+    }
   },
   methods: {
     scrollTo(x, y, time = 300) {
-      this.scroll.scrollTo(x, y, time);
+      this.scroll && this.scroll.scrollTo(x, y, time);
     },
-    finishPullUp(){
-      setTimeout(() => {
+    finishPullUp() {
       this.scroll.finishPullUp()
-      }, 4000);
     },
-    clickMe(){
-      console.log('ssssss')
+    refresh() {
+      this.scroll.refresh()
+    },
+    getScrollY(){
+      return this.scroll?this.scroll.y:0
     }
   },
+  watch: {
+    data() {
+      setTimeout(this.refresh, 20);
+    }
+  }
 };
 </script>
 
-<style>
-.clickOnMe{
-  z-index: 10;
-}
+<style scoped>
+
 </style>
