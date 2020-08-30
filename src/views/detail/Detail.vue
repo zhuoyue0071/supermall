@@ -3,9 +3,6 @@
     <detail-nav-bar class="detail-nav" @titleClick="titleClick" ref="nav"></detail-nav-bar>
     <scroll class="content" ref="scroll" @scroll="contentScroll" :probe-type="3">
       <div>
-      <ul>
-        <li v-for="item in $store.state.cartList" :key="item.index">{{item}}</li>
-      </ul>
         <detail-swiper :top-images="topImages"></detail-swiper>
         <detail-base-info :goods="goods"></detail-base-info>
         <detail-shop-info :shop="shop"></detail-shop-info>
@@ -16,8 +13,9 @@
       </div>
     </scroll>
     <detail-bottom-bar @addToCart="addInCart"></detail-bottom-bar>
-    <back-top @click.native="backClick" v-show="isShowBackTop"></back-top>
 
+    <back-top @click.native="backClick" v-show="isShowBackTop"></back-top>
+    <!-- <toast :message="message" :show="show"></toast> -->
   </div>
 </template>
 
@@ -31,8 +29,9 @@ import DetailParamInfo from "./childComps/DetailParamInfo";
 import DetailCommentInfo from "./childComps/DetailCommentInfo";
 import DetailBottomBar from "./childComps/DetailBottomBar";
 
-import GoodsList from "components/content/goods/GoodsList";
 import Scroll from "components/common/scroll/Scroll";
+import GoodsList from "components/content/goods/GoodsList";
+import Toast from "components/common/toast/Toast"
 
 import {
   getDetail,
@@ -43,6 +42,9 @@ import {
 } from "network/detail";
 import { debounce } from "common/utils";
 import { itemListenerMixin, backTopMixin } from "common/mixin";
+
+import {mapActions} from 'vuex'
+
 export default {
   name: "Detail",
   components: {
@@ -56,6 +58,7 @@ export default {
     DetailBottomBar,
     Scroll,
     GoodsList,
+    Toast
   },
   mixins: [itemListenerMixin,backTopMixin],
   data() {
@@ -71,7 +74,8 @@ export default {
       themeTopYs: [],
       getThemeTopY: null,
       currentIndex: 0,
-
+      message: '',
+      show: false
     };
   },
   created() {
@@ -123,6 +127,8 @@ export default {
     }, 110);
   },
   methods: {
+    ...mapActions(['addCart']),
+
     addInCart(){
       //1. 获取购物车需要展示的数据
       const product = {}
@@ -133,7 +139,20 @@ export default {
       product.iid = this.iid
 
       //2.将商品添加到购物车里
-      this.$store.dispatch('addCart', product)
+      this.addCart(product).then(res => {
+        // this.show=true;
+        // this.message = res
+
+        // setTimeout(() => {
+        //   this.show = false
+        //   this.message = ''
+        // }, 1500);
+
+        this.$toast.show(res, 1500)
+      })
+      // this.$store.dispatch('addCart', product).then(res => {
+      //   console.log(res);
+      // })
     },
     imageLoad() {
       this.$refs.scroll.refresh();
