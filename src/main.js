@@ -19,11 +19,9 @@ Vue.use(toast)
 FastClick.attach(document.body)
 
 //使用懒加载插件
-Vue.use(VueLazyLoad
-//   , {
-//   loading: require('./assets/img/common/placeholder.png')
-// }
-)
+Vue.use(VueLazyLoad, {
+  loading: require('./assets/img/common/placeholder.png')
+})
 
 new Vue({
   render: h => h(App),
